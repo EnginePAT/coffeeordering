@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Coffee Orders</title>
+  <style>
+  /* Base styles */
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 0;
+    color: #333;
+  }
+
+  header {
+    background-color: #4a2c2a;
+    color: white;
+    padding: 1rem 2rem;
+    text-align: center;
+  }
+
+  main {
+    padding: 2rem;
+    max-width: 800px;
+    margin: auto;
+  }
+
+  h2 {
+    margin-top: 2rem;
+    color: #4a2c2a;
+  }
+
+  /* Form */
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+
+  label, fieldset {
+    display: flex;
+    flex-direction: column;
+  }
+
+  input[type="text"], select {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  fieldset {
+    border: none;
+    padding: 0;
+  }
+
+  fieldset label {
+    display: flex;
+    justify-content: space-between;
+    align-items: left;
+    padding: 0.25rem 0;
+    width: 100%;
+    max-width: 300px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  button {
+    padding: 0.75rem 1rem;
+    background-color: #4a2c2a;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: fit-content;
+  }
+
+  button:hover {
+    background-color: #6b3b36;
+  }
+
+  /* Order list */
+  #order-list {
+    margin-top: 1rem;
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+
+  .milk-title {
+      font-weight: bold;
+  }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Coffee Orders</h1>
+  </header>
+
+  <main>
+    <section id="new-order">
+      <h2>New Order</h2>
+      <form id="order-form">
+        <label>
+          Your Name/Seat No.:
+          <input type="text" name="name" required />
+        </label>
+
+        <label>
+          Coffee Type:
+          <select name="coffee" required>
+            <option value="">Select coffee</option>
+            <option value="Espresso">Espresso</option>
+            <option value="Latte">Latte</option>
+            <option value="Cappuccino">Cappuccino</option>
+            <option value="Long-Black">Long Black</option>
+            <option value="Machiato">Machiato</option>
+            <option value="Hot-Chocolate">Hot Chocolate</option>
+            <option value="Green-Tea">Green Tea</option>
+            <option value="Black-Tea">Black Tea</option>
+            <option value="Mocha">Mocha</option>
+            <option value="Flat-White">Flat White</option>
+          </select>
+        </label>
+
+        <!--<fieldset>
+          <legend>Size</legend>
+          <label><input type="radio" name="size" value="Small" required /> Small</label>
+          <label><input type="radio" name="size" value="Medium" /> Medium</label>
+          <label><input type="radio" name="size" value="Large" /> Large</label>
+        </fieldset>-->
+
+        <fieldset>
+            <legend class="milk-title">Sugar</legend>
+            <label><input type="number" name="size" value="Large" /> Large</label>
+        </fieldset>
+
+        <fieldset>
+          <legend class="milk-title">Milk</legend>
+          <label><input type="checkbox" name="addons" value="Milk" /> Full Cream Milk</label>
+          <label><input type="checkbox" name="addons" value="Sugar" /> Skim Milk</label>
+          <label><input type="checkbox" name="addons" value="Vanilla" /> Almond Milk</label>
+          <label><input type="checkbox" name="addons" value="Caramel" /> Oat Milk</label>
+          <label><input type="checkbox" name="addons" value="Soy" /> Soy Milk</label>
+          <label><input type="checkbox" name="addons" value="Lactose-free" /> Lactose Free</label>
+        </fieldset>
+
+        <button type="submit">Place Order</button>
+      </form>
+    </section>
+
+    <section id="orders">
+      <h2>Load Orders</h2>
+      <button id="load-orders">Load Orders</button>
+      <button id="clearOrdersBtn">Clear All Orders</button>
+      <div id="order-list">
+        <!-- Orders will appear here -->
+      </div>
+    </section>
+  </main>
+  <script type="text/javascript">
+      const form = document.getElementById('order-form');
+      const orderList = document.getElementById('order-list');
+      const loadBtn = document.getElementById('load-orders');
+      const clearOrdersBtn = document.getElementById('clearOrdersBtn');
+
+      // Define orders globally
+      let orders = JSON.parse(localStorage.getItem('coffeeOrders') || '[]');
+
+      // Save order to localStorage
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+        const name = formData.get('name');
+        const coffee = formData.get('coffee');
+        const size = formData.get('size');
+        const addons = formData.getAll('addons');
+
+        const order = {
+          name,
+          coffee,
+          size,
+          addons,
+          timestamp: new Date().toISOString()
+        };
+
+        // Add the new order to the orders array and save to localStorage
+        orders.push(order);
+        localStorage.setItem('coffeeOrders', JSON.stringify(orders));
+        form.reset();
+        alert("Order placed!");
+      });
+
+      // Load orders from localStorage
+      loadBtn.addEventListener('click', () => {
+        orderList.innerHTML = '';
+        if (orders.length === 0) {
+          orderList.innerHTML = '<p>No orders yet.</p>';
+        } else {
+          orders.forEach((order, index) => {
+            const orderDiv = document.createElement('div');
+            orderDiv.className = 'order';
+
+            orderDiv.innerHTML = `
+              <h4>Order #${index + 1}</h4>
+              <p><strong>Name:</strong> ${order.name}</p>
+              <p><strong>Coffee:</strong> ${order.coffee}</p>
+              <p><strong>Sugars:</strong> ${order.size}</p>
+              <p><strong>Add-ons:</strong> ${order.addons.join(', ') || 'None'}</p>
+              <p><small>${new Date(order.timestamp).toLocaleString()}</small></p>
+              <hr/>
+            `;
+            orderList.appendChild(orderDiv);
+          });
+        }
+      });
+
+      // Clear all orders
+      clearOrdersBtn.addEventListener('click', () => {
+        // Clear orders array and localStorage
+        orders = [];
+        localStorage.setItem('coffeeOrders', JSON.stringify(orders));
+        orderList.innerHTML = '<p>No orders yet.</p>';
+        alert("All orders cleared!");
+      });
+  </script>
+</body>
+</html>
