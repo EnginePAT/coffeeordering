@@ -148,18 +148,24 @@
         </fieldset>-->
 
         <fieldset>
-            <legend class="milk-title">Sugar</legend>
-            <label><input type="number" name="size" value="Large" /> Large</label>
+            <legend class="milk-title">Sugars</legend>
+            <label><input type="number" name="size" value="Large" /></label>
         </fieldset>
 
         <fieldset>
-          <legend class="milk-title">Milk</legend>
-          <label><input type="checkbox" name="addons" value="Milk" /> Full Cream Milk</label>
-          <label><input type="checkbox" name="addons" value="Sugar" /> Skim Milk</label>
-          <label><input type="checkbox" name="addons" value="Vanilla" /> Almond Milk</label>
-          <label><input type="checkbox" name="addons" value="Caramel" /> Oat Milk</label>
-          <label><input type="checkbox" name="addons" value="Soy" /> Soy Milk</label>
-          <label><input type="checkbox" name="addons" value="Lactose-free" /> Lactose Free</label>
+          <legend class="milk-title">Milks</legend>
+          <label><input type="checkbox" name="addons" value="Full Cream Milk" /> Full Cream Milk</label>
+          <label><input type="checkbox" name="addons" value="Skim Milk" /> Skim Milk</label>
+          <label><input type="checkbox" name="addons" value="Almond Milk" /> Almond Milk</label>
+          <label><input type="checkbox" name="addons" value="Oat Milk" /> Oat Milk</label>
+          <label><input type="checkbox" name="addons" value="Soy Milk" /> Soy Milk</label>
+          <label><input type="checkbox" name="addons" value="Lactose free" /> Lactose Free</label>
+
+          <br>
+
+          <legend class="milk-title">Extra's</legend>
+          <label><input type="checkbox" name="addons" value="Extra shot" /> Extra Shot</label>
+          <label><input type="checkbox" name="addons" value="Extra hot" /> Extra Hot</label>
         </fieldset>
 
         <button type="submit">Place Order</button>
@@ -214,7 +220,6 @@
         orders.push(order);
         localStorage.setItem('coffeeOrders', JSON.stringify(orders));
         form.reset();
-        alert("Order placed!");
       });
 
       // Load orders from localStorage
@@ -247,7 +252,6 @@
         orders = [];
         localStorage.setItem('coffeeOrders', JSON.stringify(orders));
         orderList.innerHTML = '<p>No orders yet.</p>';
-        alert("All orders cleared!");
       });
   </script>
 </body>
